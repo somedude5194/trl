@@ -77,6 +77,10 @@ accelerate launch --config_file examples/accelerate_configs/deepspeed_zero2.yaml
 if __name__ == "__main__":
     parser = HfArgumentParser((ScriptArguments, PPOConfig, ModelConfig))
     script_args, training_args, model_args = parser.parse_args_into_dataclasses()
+    print("scripts_args: ",script_args)
+    print("training_args",training_args)#
+    print("model_args",model_args)
+"""
     # remove output_dir if exists
     shutil.rmtree(training_args.output_dir, ignore_errors=True)
 
@@ -127,7 +131,7 @@ if __name__ == "__main__":
     eval_dataset = dataset[script_args.dataset_test_split] if training_args.eval_strategy != "no" else None
 
     def prepare_dataset(dataset, tokenizer):
-        """pre-tokenize the dataset before training; only collate during training"""
+        #pre-tokenize the dataset before training; only collate during training
 
         def tokenize(element):
             input_ids = tokenizer.apply_chat_template(
@@ -155,7 +159,7 @@ if __name__ == "__main__":
             eval_dataset = eval_dataset.filter(lambda x: x["lengths"] <= 512, num_proc=training_args.dataset_num_proc)
 
     assert train_dataset[0]["input_ids"][-1] != tokenizer.eos_token_id, "The last token should not be an EOS token"
-    ################
+   ################
     # Training
     ################
     trainer = PPOTrainer(
@@ -176,4 +180,4 @@ if __name__ == "__main__":
     if training_args.push_to_hub:
         trainer.push_to_hub(dataset_name=script_args.dataset_name)
 
-    trainer.generate_completions()
+    trainer.generate_completions()"""
