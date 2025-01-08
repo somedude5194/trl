@@ -80,7 +80,7 @@ if __name__ == "__main__":
     print("scripts_args: ",script_args)
     print("training_args",training_args)#
     print("model_args",model_args)
-"""
+
     # remove output_dir if exists
     shutil.rmtree(training_args.output_dir, ignore_errors=True)
 
@@ -111,6 +111,13 @@ if __name__ == "__main__":
     reward_model = AutoModelForSequenceClassification.from_pretrained(
         training_args.reward_model_path, trust_remote_code=model_args.trust_remote_code, num_labels=1
     )
+    # Define the reward function
+    def reward_function(texts):
+        # Reward logic based on text length
+        # Shorter responses get higher rewards
+        rewards = [-len(text) for text in texts]
+        return rewards
+    
     policy = AutoModelForCausalLM.from_pretrained(
         training_args.sft_model_path, trust_remote_code=model_args.trust_remote_code
     )
@@ -167,7 +174,7 @@ if __name__ == "__main__":
         processing_class=tokenizer,
         model=policy,
         ref_model=ref_policy,
-        reward_model=reward_model,
+        reward_model=reward_function,
         value_model=value_model,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
@@ -180,4 +187,4 @@ if __name__ == "__main__":
     if training_args.push_to_hub:
         trainer.push_to_hub(dataset_name=script_args.dataset_name)
 
-    trainer.generate_completions()"""
+    trainer.generate_completions()
