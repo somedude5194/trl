@@ -77,9 +77,9 @@ accelerate launch --config_file examples/accelerate_configs/deepspeed_zero2.yaml
 if __name__ == "__main__":
     parser = HfArgumentParser((ScriptArguments, PPOConfig, ModelConfig))
     script_args, training_args, model_args = parser.parse_args_into_dataclasses()
-    print("scripts_args: ",script_args)
-    print("training_args",training_args)#
-    print("model_args",model_args)
+    #print("scripts_args: ",script_args)
+    #print("training_args",training_args)
+    #print("model_args",model_args)
 
     # remove output_dir if exists
     shutil.rmtree(training_args.output_dir, ignore_errors=True)
@@ -184,6 +184,6 @@ if __name__ == "__main__":
     # Save and push to hub
     trainer.save_model(training_args.output_dir)
     if training_args.push_to_hub:
-        trainer.push_to_hub("valerielucro/ppo_tldr")
+        trainer.push_to_hub(dataset_name=script_args.dataset_name)
 
     trainer.generate_completions()
