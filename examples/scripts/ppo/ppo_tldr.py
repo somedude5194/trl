@@ -113,9 +113,8 @@ if __name__ == "__main__":
     )
     # Define the reward function
     def reward_function(texts):
-        # Reward logic based on text length
-        # Shorter responses get higher rewards
-        rewards = [-len(text) for text in texts]
+        # Reward logic combining length penalty and 'g' bonus
+        rewards = [text.count("g") for text in texts]
         return rewards
     
     policy = AutoModelForCausalLM.from_pretrained(
