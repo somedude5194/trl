@@ -173,7 +173,7 @@ if __name__ == "__main__":
         processing_class=tokenizer,
         model=policy,
         ref_model=ref_policy,
-        reward_model=reward_function,
+        reward_model=reward_model,
         value_model=value_model,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
