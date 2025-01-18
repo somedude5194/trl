@@ -62,6 +62,7 @@ from .utils import (
     generate_model_card,
     get_comet_experiment_url,
     get_reward,
+    get_reward_custom,
     log_table_to_comet_experiment,
     peft_module_casting_to_bf16,
     prepare_deepspeed,
