@@ -1098,7 +1098,7 @@ def get_reward(
     )
 
 def get_reward_custom(model: Callable, processor: PreTrainedTokenizerBase, query_responses: torch.Tensor) -> torch.Tensor: #double check the processor type
-    texts = processor.batch_decode(query_responses)
+    texts = processor.batch_decode(query_responses,skip_special_tokens=True)
     rewards = model(texts)
     rewards = torch.tensor(rewards, dtype=torch.float).to(query_responses.device)
     return rewards
