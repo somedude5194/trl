@@ -466,13 +466,14 @@ class PPOTrainer(Trainer):
                         context_length,
                     )
                     value = full_value[:, context_length - 1 : -1].squeeze(-1)
-                    _, score, _ = get_reward(
-                        reward_model,
-                        processing_class,
-                        postprocessed_query_response,
-                        processing_class.pad_token_id,
-                        context_length,
-                    )
+                    if isinstance(reward_model, torch.nn.Module):
+                        _, score, _ = get_reward(
+                            reward_model, postprocessed_query_response, processing_class.pad_token_id, context_length
+                        )
+                    else:
+                        score = get_reward_custom(
+                            reward_model, processing_class, postprocessed_query_response
+                        )
 
                     responses.append(response)
                     postprocessed_responses.append(postprocessed_response)
@@ -721,14 +722,14 @@ class PPOTrainer(Trainer):
                         gather_object(processing_class.batch_decode(postprocessed_response))
                     )
 
-                    postprocessed_query_response = torch.cat((query, postprocessed_response), 1)
-                    _, score, _ = get_reward(
-                        self.reward_model,
-                        processing_class,
-                        postprocessed_query_response,
-                        processing_class.pad_token_id,
-                        context_length,
-                    )
+                    if isinstance(self.reward_model, torch.nn.Module):
+                        _, score, _ = get_reward(
+                            self.reward_model, postprocessed_query_response, processing_class.pad_token_id, context_length
+                        )
+                    else:
+                        score = get_reward_custom(
+                            self.reward_model, processing_class, postprocessed_query_response
+                        )
                     table["score"].extend(self.accelerator.gather(score).float().cpu().numpy())
 
                 if sampling:
