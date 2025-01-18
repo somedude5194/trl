@@ -95,7 +95,7 @@ if __name__ == "__main__":
         revision=model_args.model_revision,
         attn_implementation=model_args.attn_implementation,
         torch_dtype=torch_dtype,
-        device_map=get_kbit_device_map() if quantization_config is not None else None,
+        device_map="auto", #get_kbit_device_map() if quantization_config is not None else None,
         quantization_config=quantization_config,
     )
 
